@@ -6,15 +6,14 @@ import './models/db_connect.dart';
 void main() {
   var db = DBConnect();
   db.addQuestion(
-    Question(id: '3', 
-    title: 'what is 45 x 25 ?', 
-    options: {
-      '2245':false,
-      '4718':false,
-      '1125':true,
-      '4871':false,
-    })
+    Question(
+      id: '3',
+      title: 'what is 45 x 25 ?',
+      options: {'2245': false, '4718': false, '1125': true, '4871': false},
+    ),
   );
+
+  db.fetchQuestions();
   runApp(const MyApp());
 }
 
