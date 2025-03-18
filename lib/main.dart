@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/models/ques_model.dart';
+//import 'package:quiz_app/models/ques_model.dart';
 import './screens/home_screen.dart';
-import './models/db_connect.dart';
+//import './models/db_connect.dart';
 
 void main() {
-  var db = DBConnect();
+ /* var db = DBConnect();
   db.addQuestion(
     Question(
       id: '3',
@@ -13,7 +13,7 @@ void main() {
     ),
   );
 
-  db.fetchQuestions();
+  db.fetchQuestions();*/
   runApp(const MyApp());
 }
 
