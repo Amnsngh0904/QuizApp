@@ -5,6 +5,7 @@ import '../widgets/question_widget.dart';
 import '../widgets/next_button.dart';
 import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
+import '../models/db_connect.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,8 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Question> _questions = [
-    Question(
+  var db = DBConnect();
+  // List<Question> _questions = [
+  /* Question(
       id: '01',
       title: 'Who is GOAT of cricket ?',
       options: {
@@ -36,7 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
         'Bill Gates': false,
       },
     ),
-  ];
+  ]; */
+
+  late Future _questions;
+  Future<List<Question>> getData() async {
+    return db.fetchQuestions();
+  }
+
+  void initState() {
+    _questions = getData();
+    super.initState();
+  }
 
   //create an index to loop through _questions
   int index = 0;
@@ -46,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isAlreadySelected = false;
 
   //function to display the next question
-  void nextQuestion() {
-    if (index == _questions.length - 1) {
+  void nextQuestion(int questionLength) {
+    if (index == questionLength - 1) {
       showDialog(
         context: context,
         barrierDismissible:
@@ -55,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder:
             (ctx) => ResultBox(
               result: score,
-              questionLength: _questions.length,
+              questionLength: questionLength,
               onPressed: startOver,
             ),
       );
@@ -104,80 +116,109 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
   }
 
-  @override
+  /*@override
   void initState() {
     // TODO: implement initState
     super.initState();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: background,
-      appBar: AppBar(
-        title: const Padding(
-          padding: const EdgeInsets.only(top: 100.0, bottom: 100.0),
-          child: const Text(
-            'Quiz App',
-            style: TextStyle(
-              fontSize: 40,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        backgroundColor: background,
-        shadowColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'Score: $score',
-              style: const TextStyle(fontSize: 20.0),
-            ),
-          ),
-        ],
-      ),
-
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          children: [
-            QuestionWidget(
-              question: _questions[index].title, //means the first ques in list
-              indexAction: index, //currently at 0
-              totalQuestions: _questions.length, //total length of list
-            ),
-
-            const Divider(color: Colors.black12),
-            const SizedBox(height: 25.0),
-
-            for (int i = 0; i < _questions[index].options.length; i++)
-              GestureDetector(
-                onTap:
-                    () => checkAnswerandUpdate(
-                      _questions[index].options.values.toList()[i],
+    return FutureBuilder(
+      future: _questions as Future<List<Question>>,
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(child: Text('${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            var extractedData = snapshot.data as List<Question>;
+            return Scaffold(
+              backgroundColor: background,
+              appBar: AppBar(
+                title: const Padding(
+                  padding: const EdgeInsets.only(top: 100.0, bottom: 100.0),
+                  child: const Text(
+                    'Quiz App',
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
-                child: OptionCard(
-                  option: _questions[index].options.keys.toList()[i],
-                  color:
-                      isPressed
-                          ? _questions[index].options.values.toList()[i] == true
-                              ? correct
-                              : incorrect
-                          : neutral,
+                  ),
+                ),
+                backgroundColor: background,
+                shadowColor: Colors.transparent,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Score: $score',
+                      style: const TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                ],
+              ),
+
+              body: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  children: [
+                    QuestionWidget(
+                      question:
+                          extractedData[index]
+                              .title, //means the first ques in list
+                      indexAction: index, //currently at 0
+                      totalQuestions:
+                          extractedData.length, //total length of list
+                    ),
+
+                    const Divider(color: Colors.black12),
+                    const SizedBox(height: 25.0),
+
+                    for (
+                      int i = 0;
+                      i < extractedData[index].options.length;
+                      i++
+                    )
+                      GestureDetector(
+                        onTap:
+                            () => checkAnswerandUpdate(
+                              extractedData[index].options.values.toList()[i],
+                            ),
+                        child: OptionCard(
+                          option: extractedData[index].options.keys.toList()[i],
+                          color:
+                              isPressed
+                                  ? extractedData[index].options.values
+                                              .toList()[i] ==
+                                          true
+                                      ? correct
+                                      : incorrect
+                                  : neutral,
+                        ),
+                      ),
+                  ],
                 ),
               ),
-          ],
-        ),
-      ),
 
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: NextButton(nextQuestion: nextQuestion),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: GestureDetector(
+                onTap: () => nextQuestion(extractedData.length),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: NextButton(),
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+            );
+          }
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return const Center(child: Text('No data'));
+      },
     );
   }
 }

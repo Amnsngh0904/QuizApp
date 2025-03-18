@@ -14,8 +14,8 @@ class DBConnect {
     );
   }
 
-  Future<void> fetchQuestions() async {
-    http.get(url).then((response) {
+  Future<List<Question>> fetchQuestions() async {
+    return http.get(url).then((response) {
       // the 'then' method returns a 'response' which is our data.
       // to whats inside we have to decode it first.
 
@@ -27,9 +27,9 @@ class DBConnect {
           title: value['title'],
           options: Map.castFrom(value['options']),
         );
-        newQuestions.add(newQuestion); 
+        newQuestions.add(newQuestion);
       });
-      print(data);
+      return newQuestions;
     });
   }
 }
