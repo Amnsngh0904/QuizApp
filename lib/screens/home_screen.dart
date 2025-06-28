@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:quiz_app/models/ques_model.dart';
 import '../constant.dart';
 import '../widgets/question_widget.dart';
 import '../widgets/next_button.dart';
 import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
-import '../models/db_connect.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     QuestionWidget(
                       question:
                           extractedData[index]
-                              .title, //means the first ques in list
+                              .question, //means the first ques in list
                       indexAction: index, //currently at 0
                       totalQuestions:
                           extractedData.length, //total length of list
@@ -182,20 +182,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       i++
                     )
                       GestureDetector(
-                        onTap:
-                            () => checkAnswerandUpdate(
-                              extractedData[index].options.values.toList()[i],
-                            ),
+                        onTap: () => checkAnswerandUpdate(
+                          extractedData[index].options[i] ==
+                              extractedData[index].answer,
+                        ),
                         child: OptionCard(
-                          option: extractedData[index].options.keys.toList()[i],
-                          color:
-                              isPressed
-                                  ? extractedData[index].options.values
-                                              .toList()[i] ==
-                                          true
-                                      ? correct
-                                      : incorrect
-                                  : neutral,
+                          option: extractedData[index].options[i],
+                          color: isPressed
+                              ? extractedData[index].options[i] ==
+                                      extractedData[index].answer
+                                  ? correct
+                                  : incorrect
+                              : neutral,
                         ),
                       ),
                   ],
@@ -222,3 +220,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+*/
