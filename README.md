@@ -1,6 +1,6 @@
 QUIZ APP 
 
-A sleek and interactive **Quiz App** built with **Flutter** and backed by **Firebase**, designed to provide a seamless quiz-taking experience with real-time data handling and user authentication.
+**TechTrek** is a cross-platform quiz app built with Flutter, designed to help users test and enhance their knowledge across key Computer Science domains like AI, ML, Cybersecurity, and more. It features dynamically generated questions using the Gemini API, a clean and intuitive UI, real-time score tracking, and detailed result summaries.
 
  Features :
 - 📊 Real-time Score Tracking
