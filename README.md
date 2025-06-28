@@ -8,7 +8,7 @@ A sleek and interactive **Quiz App** built with **Flutter** and backed by **Fire
 - 🧪 Multiple Quiz Categories 
 - 🎯 Clean UI with intuitive navigation
 - 🌐 **Gemini API** Integration for generating quiz questions
-- - 🔗 **Firestore Integration** to cache questions for offline use / API fallback
+- 🔗 **Firestore Integration** to cache questions for offline use / API fallback
 
 
 
